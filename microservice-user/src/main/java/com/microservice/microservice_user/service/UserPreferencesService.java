@@ -43,7 +43,7 @@ public class UserPreferencesService {
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con ID: " + userId));
 
         UserPreferences preferences = preferencesRepository.findByUserId(userId)
-                .orElseGet(() -> new UserPreferences(user));
+                .orElseGet(() -> UserPreferences.builder().user(user).build());
 
         preferences.setTheme(preferencesDTO.getTheme());
         preferences.setLanguage(preferencesDTO.getLanguage());
@@ -59,12 +59,14 @@ public class UserPreferencesService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con ID: " + userId));
 
-        UserPreferences defaultPreferences = new UserPreferences(user);
-        defaultPreferences.setTheme("LIGHT");
-        defaultPreferences.setLanguage("ES");
-        defaultPreferences.setNotificationsEnabled(true);
-        defaultPreferences.setEmailNotifications(true);
-        defaultPreferences.setPushNotifications(true);
+        UserPreferences defaultPreferences = UserPreferences.builder()
+                .user(user)
+                .theme("LIGHT")
+                .language("ES")
+                .notificationsEnabled(true)
+                .emailNotifications(true)
+                .pushNotifications(true)
+                .build();
 
         return preferencesRepository.save(defaultPreferences);
     }

@@ -64,6 +64,10 @@ public class UserAssembler {
         return user;
     }
 
+    public User toEntity(CreateUserDTO createUserDTO) {
+        return fromCreateDTO(createUserDTO);
+    }
+
     public User updateFromDTO(User user, UpdateUserDTO updateUserDTO) {
         if (user == null || updateUserDTO == null) {
             return user;
@@ -83,6 +87,10 @@ public class UserAssembler {
         }
 
         return user;
+    }
+
+    public void updateEntity(User user, UpdateUserDTO updateUserDTO) {
+        updateFromDTO(user, updateUserDTO);
     }
 
     public UserPreferencesDTO toPreferencesDTO(UserPreferences preferences) {
@@ -107,14 +115,15 @@ public class UserAssembler {
             return null;
         }
 
-        UserPreferences preferences = new UserPreferences();
-        preferences.setId(preferencesDTO.getId());
-        preferences.setUser(user);
-        preferences.setTheme(preferencesDTO.getTheme());
-        preferences.setLanguage(preferencesDTO.getLanguage());
-        preferences.setNotificationsEnabled(preferencesDTO.getNotificationsEnabled());
-        preferences.setEmailNotifications(preferencesDTO.getEmailNotifications());
-        preferences.setPushNotifications(preferencesDTO.getPushNotifications());
+        UserPreferences preferences = UserPreferences.builder()
+                .id(preferencesDTO.getId())
+                .user(user)
+                .theme(preferencesDTO.getTheme())
+                .language(preferencesDTO.getLanguage())
+                .notificationsEnabled(preferencesDTO.getNotificationsEnabled())
+                .emailNotifications(preferencesDTO.getEmailNotifications())
+                .pushNotifications(preferencesDTO.getPushNotifications())
+                .build();
 
         return preferences;
     }
