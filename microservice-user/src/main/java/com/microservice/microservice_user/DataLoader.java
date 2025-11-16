@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.microservice.microservice_user.model.User;
+import com.microservice.microservice_user.model.UserRole;
 import com.microservice.microservice_user.repository.UserRepository;
 
 import net.datafaker.Faker;
@@ -21,15 +22,16 @@ public class DataLoader implements CommandLineRunner{
     public void run(String... args) throws Exception {
         Faker faker = new Faker();
     
-        for(Long i = (long) 0; i < 10; i++){
+        for(int i = 0; i < 10; i++){
             String firstName = faker.name().firstName();
             String fullName = faker.name().fullName();
     
             User user = new User();
-            user.setId(i+1);
-            user.setName(fullName);
+            user.setUsername(firstName.toLowerCase());
+            user.setFirstName(firstName);
             user.setEmail(firstName.toLowerCase() + "@duocuc.cl");
-            user.setRol("USER");
+            user.setPassword("defaultPassword");
+            user.setRole(UserRole.USER);
     
             userRepository.save(user);
         }

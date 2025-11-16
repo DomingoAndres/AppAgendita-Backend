@@ -1,19 +1,11 @@
 package com.microservice.microservice_user.service;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.microservice.microservice_user.Assembler.UserAssembler;
-import com.microservice.microservice_user.dto.*;
-
-import com.microservice.microservice_user.exception.*;
-import com.microservice.microservice_user.model.User;
-import com.microservice.microservice_user.model.UserRole;
-import com.microservice.microservice_user.repository.UserRepository;
-
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import com.microservice.microservice_user.assembler.UserAssembler;
+import com.microservice.microservice_user.dto.*;
+import com.microservice.microservice_user.exception.*;
+import com.microservice.microservice_user.model.User;
+import com.microservice.microservice_user.model.UserRole;
+import com.microservice.microservice_user.repository.UserRepository;
 
 @Service
 @Transactional

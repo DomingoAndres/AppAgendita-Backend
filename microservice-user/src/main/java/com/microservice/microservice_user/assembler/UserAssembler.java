@@ -1,6 +1,9 @@
 package com.microservice.microservice_user.assembler;
 
 import com.microservice.microservice_user.model.User;
+import com.microservice.microservice_user.model.UserPreferences;
+import com.microservice.microservice_user.dto.CreateUserDTO;
+import com.microservice.microservice_user.dto.UpdateUserDTO;
 import com.microservice.microservice_user.dto.UserDTO;
 import com.microservice.microservice_user.dto.UserPreferencesDTO;
 import org.springframework.hateoas.EntityModel;

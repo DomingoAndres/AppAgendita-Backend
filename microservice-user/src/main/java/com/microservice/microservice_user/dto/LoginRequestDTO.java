@@ -19,12 +19,6 @@ public class LoginRequestDTO {
     @NotBlank(message = "La contraseña es requerida")
     private String password;
 
-    // Constructors
-    public LoginRequestDTO() {}
 
-    public LoginRequestDTO(String usernameOrEmail, String password) {
-        this.usernameOrEmail = usernameOrEmail;
-        this.password = password;
-    }
 
 }
