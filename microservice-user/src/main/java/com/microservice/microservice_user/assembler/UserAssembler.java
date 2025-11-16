@@ -6,11 +6,10 @@ import com.microservice.microservice_user.dto.CreateUserDTO;
 import com.microservice.microservice_user.dto.UpdateUserDTO;
 import com.microservice.microservice_user.dto.UserDTO;
 import com.microservice.microservice_user.dto.UserPreferencesDTO;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.server.RepresentationModelAssembler;
-import org.springframework.stereotype.Component;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+// Temporarily disabled HATEOAS imports due to compatibility issues
+// import org.springframework.hateoas.EntityModel;
+// import org.springframework.hateoas.server.RepresentationModelAssembler;
+// import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import org.springframework.stereotype.Component;
 
@@ -19,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class UserAssembler {
+    // Temporarily removed RepresentationModelAssembler interface due to compatibility issues
 
     public UserDTO toDTO(User user) {
         if (user == null) {
