@@ -19,7 +19,7 @@ spring:
           predicates:
             - Path=/api/v1/note/**
         - id: tasks
-          uri: http://localhost:8091
+          uri: http://localhost:8071
           predicates:
             - Path=/api/v1/task/**
         - id: events
