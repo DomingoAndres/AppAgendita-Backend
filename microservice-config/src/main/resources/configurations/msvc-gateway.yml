@@ -1,6 +1,10 @@
 server:
   port: 8080
 
+# JWT Configuration (debe ser el mismo que en microservice-user)
+jwt:
+  secret: myVerySecretKeyForAppAgenditaUserService2024
+
 spring:
   application:
     name: msvc-gateway
@@ -10,22 +14,45 @@ spring:
         locator:
           enabled: true
       routes:
+        # Ruta para autenticación (login)
+        - id: auth
+          uri: http://localhost:8070
+          predicates:
+            - Path=/api/auth/**
+        # Ruta para usuarios
         - id: users
           uri: http://localhost:8070
           predicates:
-            - Path=/api/v1/user/**
-        - id: notes
-          uri: http://localhost:9090
-          predicates:
-            - Path=/api/v1/note/**
+            - Path=/api/users/**
+        # Ruta para tareas
         - id: tasks
           uri: http://localhost:8071
           predicates:
-            - Path=/api/v1/task/**
+            - Path=/api/tasks/**
+        # Rutas para futuros microservicios
+        - id: notes
+          uri: http://localhost:9090
+          predicates:
+            - Path=/api/notes/**
         - id: events
           uri: http://localhost:9091
           predicates:
-            - Path=/api/v1/event/**
+            - Path=/api/events/**
+      # Configuración global de CORS
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+              - PATCH
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
 
 eureka:
   client:
