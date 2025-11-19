@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MicroserviceTaskApplication",
+            "request": "launch",
+            "mainClass": "com.microservice.microservice_task.MicroserviceTaskApplication",
+            "projectName": "microservice-task"
+        },
+        {
+            "type": "java",
             "name": "MicroserviceEurekaApplication",
             "request": "launch",
             "mainClass": "com.microservice.eureka.MicroserviceEurekaApplication",

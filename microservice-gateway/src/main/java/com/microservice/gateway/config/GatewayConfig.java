@@ -26,27 +26,27 @@ public class GatewayConfig {
                         .path("/api/auth/**")
                         .uri("http://localhost:8070"))
                 
-                // Ruta para usuarios (requiere JWT excepto POST /api/users)
+                // Ruta para usuarios - SIN FILTRO JWT (desarrollo)
                 .route("users", r -> r
                         .path("/api/users/**")
-                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
+                        // .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("http://localhost:8070"))
                 
-                // Ruta para tareas (requiere JWT)
+                // Ruta para tareas - SIN FILTRO JWT (desarrollo)
                 .route("tasks", r -> r
                         .path("/api/tasks/**")
-                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
+                        // .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("http://localhost:8071"))
                 
                 // Rutas para futuros microservicios
                 .route("notes", r -> r
                         .path("/api/notes/**")
-                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
+                        // .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("http://localhost:9090"))
                 
                 .route("events", r -> r
                         .path("/api/events/**")
-                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
+                        // .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("http://localhost:9091"))
                 
                 .build();
