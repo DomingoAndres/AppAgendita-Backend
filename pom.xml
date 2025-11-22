@@ -9,6 +9,7 @@
     <module>microservice-gateway</module>
     <module>microservice-user</module>
     <module>microservice-task</module>
+    <module>microservice-note</module>
   </modules>
 
   <parent>
