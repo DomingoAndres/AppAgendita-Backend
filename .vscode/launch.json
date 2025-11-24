@@ -2,17 +2,26 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MicroserviceEventApplication",
+            "request": "launch",
+            "mainClass": "com.microservice.event.MicroserviceEventApplication",
+            "projectName": "microservice-event"
+        },
+        {
+            "type": "java",
             "name": "MicroserviceTaskApplication",
             "request": "launch",
             "mainClass": "com.microservice.microservice_task.MicroserviceTaskApplication",
-            "projectName": "microservice-task"
+            "projectName": "microservice-task",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=61345 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=microservice-task"
         },
         {
             "type": "java",
             "name": "MicroserviceEurekaApplication",
             "request": "launch",
             "mainClass": "com.microservice.eureka.MicroserviceEurekaApplication",
-            "projectName": "microservice-eureka"
+            "projectName": "microservice-eureka",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=51620 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=microservice-eureka"
         },
         {
             "type": "java",
@@ -21,6 +30,39 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "com.microservice.config.MicroserviceConfigApplication",
             "projectName": "microservice-config",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=51544 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=microservice-config"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MicroserviceGatewayApplication<microservice-gateway>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.microservice.gateway.MicroserviceGatewayApplication",
+            "projectName": "microservice-gateway",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=51459 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=microservice-gateway"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MicroserviceNoteApplication<microservice-note>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.microservice.note.MicroserviceNoteApplication",
+            "projectName": "microservice-note",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=65226 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=microservice-note"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MicroserviceUserApplication<microservice-user>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.microservice.microservice_user.MicroserviceUserApplication",
+            "projectName": "microservice-user",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }

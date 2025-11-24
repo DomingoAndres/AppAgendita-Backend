@@ -10,14 +10,8 @@
     <module>microservice-user</module>
     <module>microservice-task</module>
     <module>microservice-note</module>
+    <module>microservice-event</module>
   </modules>
-
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.8</version>
-    <relativePath/> <!-- lookup parent from repository -->
-  </parent>
 
   <groupId>com.microservice</groupId>
   <artifactId>agendita-backend</artifactId>
@@ -33,12 +27,22 @@
     <maven.compiler.release>17</maven.compiler.release>
     <java.version>17</java.version>
     <spring-cloud.version>2025.0.0</spring-cloud.version>
+    <spring-boot.version>3.5.8</spring-boot.version>
+    <springdoc-openapi.version>2.3.0</springdoc-openapi.version>
+    <spring-boot-maven-plugin.version>3.1.1</spring-boot-maven-plugin.version>
+    <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
   </properties>
-
-  
 
   <dependencyManagement>
     <dependencies>
+      <!-- Spring Boot BOM -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <!-- Spring Cloud BOM -->
       <dependency>
         <groupId>org.springframework.cloud</groupId>
@@ -56,10 +60,18 @@
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
-        </plugin>        
+          <version>${spring-boot-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <release>17</release>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
 
-  
 </project>
