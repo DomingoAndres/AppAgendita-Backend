@@ -1,6 +1,7 @@
 package com.microservice.event.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,12 +9,13 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "events")
 @EntityListeners(AuditingEntityListener.class)
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -23,17 +25,24 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "note_id", nullable = false)
-    @NotNull(message = "Note ID is required")
-    private UUID noteId;
-
-    @Column(name = "owner_id", nullable = false)
-    @NotNull(message = "Owner ID is required")
+    // Usuario dueño del evento (el X-User-Id que viene del Gateway)
+    @NotNull
+    @Column(name = "owner_id", nullable = false, updatable = false)
     private UUID ownerId;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "event_participants", joinColumns = @JoinColumn(name = "event_id"))
-    private Set<Participant> participants = new HashSet<>();
+    @NotBlank
+    @Column(name = "title", nullable = false, length = 255)
+    private String title;
+
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    @NotNull
+    @Column(name = "event_timestamp", nullable = false)
+    private LocalDateTime eventTimestamp;
+
+    @Column(name = "location", length = 255)
+    private String location;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -42,24 +51,4 @@ public class Event {
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @Embeddable
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class Participant {
-
-        @Column(name = "user_id", nullable = false)
-        private UUID userId;
-
-        @Column(name = "permission", nullable = false)
-        @Enumerated(EnumType.STRING)
-        private Permission permission;
-
-        public enum Permission {
-            READ,
-            WRITE
-        }
-    }
 }

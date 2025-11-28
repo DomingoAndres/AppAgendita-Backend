@@ -4,13 +4,11 @@ import com.microservice.event.dto.CreateEventDTO;
 import com.microservice.event.dto.EventDTO;
 import com.microservice.event.dto.UpdateEventDTO;
 import com.microservice.event.model.Event;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
-@NoArgsConstructor
 public class EventAssembler {
 
     public EventDTO toDTO(Event event) {
@@ -19,9 +17,11 @@ public class EventAssembler {
         }
         return EventDTO.builder()
                 .id(event.getId())
-                .noteId(event.getNoteId())
                 .ownerId(event.getOwnerId())
-                .participants(event.getParticipants())
+                .title(event.getTitle())
+                .description(event.getDescription())
+                .eventTimestamp(event.getEventTimestamp())
+                .location(event.getLocation())
                 .createdAt(event.getCreatedAt())
                 .updatedAt(event.getUpdatedAt())
                 .build();
@@ -33,9 +33,11 @@ public class EventAssembler {
         }
         return Event.builder()
                 .id(null)
-                .noteId(createEventDTO.getNoteId())
                 .ownerId(createEventDTO.getOwnerId())
-                .participants(createEventDTO.getParticipants())
+                .title(createEventDTO.getTitle())
+                .description(createEventDTO.getDescription())
+                .eventTimestamp(createEventDTO.getEventTimestamp())
+                .location(createEventDTO.getLocation())
                 .build();
     }
 
@@ -43,8 +45,17 @@ public class EventAssembler {
         if (existingEvent == null || updateEventDTO == null) {
             return existingEvent;
         }
-        if (updateEventDTO.getParticipants() != null) {
-            existingEvent.setParticipants(updateEventDTO.getParticipants());
+        if (updateEventDTO.getTitle() != null) {
+            existingEvent.setTitle(updateEventDTO.getTitle());
+        }
+        if (updateEventDTO.getDescription() != null) {
+            existingEvent.setDescription(updateEventDTO.getDescription());
+        }
+        if (updateEventDTO.getEventTimestamp() != null) {
+            existingEvent.setEventTimestamp(updateEventDTO.getEventTimestamp());
+        }
+        if (updateEventDTO.getLocation() != null) {
+            existingEvent.setLocation(updateEventDTO.getLocation());
         }
         return existingEvent;
     }

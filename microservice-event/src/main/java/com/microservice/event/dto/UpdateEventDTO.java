@@ -1,13 +1,10 @@
 package com.microservice.event.dto;
 
-import com.microservice.event.model.Event.Participant;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.Set;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -16,8 +13,16 @@ import java.util.UUID;
 @Builder
 public class UpdateEventDTO {
 
-    @NotNull(message = "Event ID is required")
+    @NotNull(message = "El ID del evento es obligatorio")
     private UUID id;
 
-    private Set<Participant> participants;
+    @NotBlank(message = "El título es obligatorio")
+    private String title;
+
+    private String description;
+
+    @NotNull(message = "La fecha y hora del evento es obligatoria")
+    private LocalDateTime eventTimestamp;
+
+    private String location;
 }
