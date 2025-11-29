@@ -30,9 +30,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    // IMPORTANTE: Quitamos @NotBlank aquí porque tu App Android envía este campo nulo.
+    // Lo rellenaremos automáticamente en el método prePersist() abajo.
     @Column(unique = true, nullable = false)
-    @NotBlank(message = "El nombre de usuario es requerido")
-    @Size(min = 3, max = 50, message = "El nombre de usuario debe tener entre 3 y 50 caracteres")
     private String username;
 
     @Column(unique = true, nullable = false)
@@ -70,9 +70,7 @@ public class User {
     @Builder.Default
     private Boolean emailVerified = false;
 
-    // --- CORRECCIÓN CRÍTICA AQUÍ ---
-    // Inicializamos manualmente y forzamos al Builder a usar el valor por defecto
-    
+    // --- CORRECCIÓN DE FECHAS (Evita Error 500 por nulos) ---
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default 
@@ -83,7 +81,29 @@ public class User {
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    // -------------------------------
+    // --- CORRECCIÓN DE COMPATIBILIDAD CON KOTLIN ---
+    // Este método se ejecuta automáticamente antes de guardar en la BD.
+    // Soluciona que tu app Android no envíe el campo 'username'.
+    @PrePersist
+    public void prePersist() {
+        // 1. Asegurar fechas
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+        if (this.updatedAt == null) {
+            this.updatedAt = LocalDateTime.now();
+        }
+
+        // 2. Generar username desde el email si viene vacío
+        if (this.username == null || this.username.trim().isEmpty()) {
+            if (this.email != null && this.email.contains("@")) {
+                // Ejemplo: mati@gmail.com -> username = mati
+                this.username = this.email.split("@")[0];
+            } else {
+                this.username = this.email;
+            }
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
