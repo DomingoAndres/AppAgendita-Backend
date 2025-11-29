@@ -13,29 +13,30 @@ spring:
       discovery:
         locator:
           enabled: true
+          lower-case-service-id: true
       routes:
         # Ruta para autenticación (login)
         - id: auth
-          uri: http://localhost:8070
+          uri: lb://msvc-user
           predicates:
             - Path=/api/auth/**
         # Ruta para usuarios
         - id: users
-          uri: http://localhost:8070
+          uri: lb://msvc-user
           predicates:
             - Path=/api/users/**
         # Ruta para tareas
         - id: tasks
-          uri: http://localhost:8071
+          uri: lb://msvc-task
           predicates:
             - Path=/api/tasks/**
         # Rutas para futuros microservicios
         - id: notes
-          uri: http://localhost:8083
+          uri: lb://msvc-note
           predicates:
             - Path=/api/notes/**
         - id: events
-          uri: http://localhost:9091
+          uri: lb://msvc-event
           predicates:
             - Path=/api/events/**
       # Configuración global de CORS
@@ -56,5 +57,9 @@ spring:
 
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true

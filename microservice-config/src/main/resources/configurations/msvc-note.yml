@@ -5,25 +5,24 @@ spring:
     name: msvc-note
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/agendita_notes_dev?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
-    username: root
-    password:  
+    url: jdbc:mysql://136.119.250.44:3306/agendita_notes_dev?useSSL=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: duoc_uc
+    password: <Vsx%P;y1;.$Eu1H
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    sql:
-      init:
-        mode: always
+      ddl-auto: update
     show-sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
 
+# JWT Configuration - IMPORTANTE!
+jwt:
+  secret: MiClaveSecretaSuperSeguraParaJWTQueDebeSerMuyLargaParaHS512AlMenos64Caracteres123456789
+  expiration: 86400000
+
 eureka:
-  instance:
-    hostname: localhost
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
-    register-with-eureka: true
-    fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
