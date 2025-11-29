@@ -16,26 +16,63 @@ spring:
       routes:
         # Ruta para autenticación (login)
         - id: auth
-          uri: ${MSVC_USER_URL:http://localhost:8070}
+          uri: http://localhost:8080
           predicates:
             - Path=/api/auth/**
         # Ruta para usuarios
         - id: users
-          uri: ${MSVC_USER_URL:http://localhost:8070}
+          uri: http://localhost:8080
           predicates:
             - Path=/api/users/**
         # Ruta para tareas
         - id: tasks
-          uri: ${MSVC_TASK_URL:http://localhost:8071}
+          uri: http://localhost:8071
           predicates:
             - Path=/api/tasks/**
         # Rutas para futuros microservicios
         - id: notes
-          uri: ${MSVC_NOTE_URL:http://localhost:8072}
+          uri: http://localhost:8072
           predicates:
             - Path=/api/notes/**
         - id: events
-          uri: ${MSVC_EVENT_URL:http://localhost:8073}
+          uri: http://localhost:8073
+          predicates:
+            - Path=/api/events/**
+
+---
+# Configuración para el perfil de producción
+spring:
+  config:
+    activate:
+      on-profile: prod
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        # Ruta para autenticación (login)
+        - id: auth
+          uri: https://msvc-user-749990022458.us-central1.run.app
+          predicates:
+            - Path=/api/auth/**
+        # Ruta para usuarios
+        - id: users
+          uri: https://msvc-user-749990022458.us-central1.run.app
+          predicates:
+            - Path=/api/users/**
+        # Ruta para tareas
+        - id: tasks
+          uri: https://msvc-task-749990022458.us-central1.run.app
+          predicates:
+            - Path=/api/tasks/**
+        # Rutas para futuros microservicios
+        - id: notes
+          uri: https://msvc-note-749990022458.us-central1.run.app
+          predicates:
+            - Path=/api/notes/**
+        - id: events
+          uri: https://msvc-event-749990022458.us-central1.run.app
           predicates:
             - Path=/api/events/**
       # Configuración global de CORS

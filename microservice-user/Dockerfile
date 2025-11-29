@@ -38,7 +38,7 @@ WORKDIR /app
 COPY --from=builder /app/microservice-user/target/microservice-user*.jar app.jar
 
 # Puerto interno del contenedor
-EXPOSE 8070
+EXPOSE 8080
 
 # Comando de ejecución
 ENTRYPOINT ["java","-jar","/app/app.jar"]

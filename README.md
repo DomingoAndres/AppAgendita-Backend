@@ -51,7 +51,7 @@ spring.profiles.active=dev
 1. **microservice-config** (Config Server) — puerto 8888
 2. **microservice-eureka** (Eureka Server) — puerto 8761
 3. **microservice-gateway** (API Gateway) — puerto 8080
-4. Resto de microservicios: `user` (8070), `task` (8071), `note` (8083), `event` (9091)
+4. Resto de microservicios: `user` (8080), `task` (8071), `note` (8083), `event` (9091)
 
 ## Ejecución
 

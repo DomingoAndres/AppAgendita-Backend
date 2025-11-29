@@ -24,13 +24,13 @@ public class GatewayConfig {
                 // Ruta para autenticación (públicas)
                 .route("auth", r -> r
                         .path("/api/auth/**")
-                        .uri("http://localhost:8070"))
+                           .uri("http://localhost:8080"))
                 
                 // Ruta para usuarios - SIN FILTRO JWT (desarrollo)
                 .route("users", r -> r
                         .path("/api/users/**")
                         // .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
-                        .uri("http://localhost:8070"))
+                           .uri("http://localhost:8080"))
                 
                 // Ruta para tareas - SIN FILTRO JWT (desarrollo)
                 .route("tasks", r -> r

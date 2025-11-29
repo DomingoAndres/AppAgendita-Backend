@@ -1,0 +1,68 @@
+server:
+  port: ${PORT:8080}
+
+# JWT Configuration (debe ser el mismo que en microservice-user)
+jwt:
+  secret: myVerySecretKeyForAppAgenditaUserService2024
+
+spring:
+  application:
+    name: msvc-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        # Ruta para autenticación (login)
+        - id: auth
+          uri: ${MSVC_USER_URL:http://localhost:8080}
+          predicates:
+            - Path=/api/auth/**
+        # Ruta para usuarios
+        - id: users
+          uri: ${MSVC_USER_URL:http://localhost:8080}
+          predicates:
+            - Path=/api/users/**
+        # Ruta para tareas
+        - id: tasks
+          uri: ${MSVC_TASK_URL:http://localhost:8071}
+          predicates:
+            - Path=/api/tasks/**
+        # Rutas para futuros microservicios
+        - id: notes
+          uri: ${MSVC_NOTE_URL:http://localhost:8072}
+          predicates:
+            - Path=/api/notes/**
+        - id: events
+          uri: ${MSVC_EVENT_URL:http://localhost:8073}
+          predicates:
+            - Path=/api/events/**
+      # Configuración global de CORS
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    root: INFO
+
+# Deshabilitar Config Server para el perfil prod
+spring.config.import: "optional:configserver:http://localhost:8888"
+
+# Deshabilitar completamente Eureka
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false

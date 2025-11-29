@@ -1,0 +1,5 @@
+DB_HOST: "34.136.119.250"
+DB_NAME: "agendita_notes_dev"
+DB_USER: "duoc_uc"
+DB_PASSWORD: "R}jS+D2cf{_*8Ax0"
+SPRING_CONFIG_IMPORT: "configserver:https://msvc-config-749990022458.us-central1.run.app"

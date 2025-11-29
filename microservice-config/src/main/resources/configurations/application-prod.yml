@@ -1,0 +1,53 @@
+server:
+  port: ${PORT:8888}
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: users
+          uri: ${MSVC_USER_URL}
+          predicates:
+            - Path=/api/users,/api/users/**
+          filters:
+            - StripPrefix=1
+        - id: tasks
+          uri: ${MSVC_TASK_URL}
+          predicates:
+            - Path=/api/tasks,/api/tasks/**
+          filters:
+            - StripPrefix=1
+        - id: notes
+          uri: ${MSVC_NOTE_URL}
+          predicates:
+            - Path=/api/notes,/api/notes/**
+          filters:
+            - StripPrefix=1
+        - id: events
+          uri: ${MSVC_EVENT_URL}
+          predicates:
+            - Path=/api/events,/api/events/**
+          filters:
+            - StripPrefix=1
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+  instance:
+    preferIpAddress: false
+
+logging:
+  level:
+    com.netflix: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.netflix: DEBUG

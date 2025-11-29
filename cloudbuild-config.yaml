@@ -1,0 +1,11 @@
+steps:
+  - name: 'maven:3.9.6-eclipse-temurin-17-alpine'
+    entrypoint: 'mvn'
+    args: ['clean', 'package', '-pl', 'microservice-config', '-am', '-DskipTests']
+    dir: '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f', 'microservice-config/Dockerfile', '-t', 'gcr.io/$PROJECT_ID/msvc-config:latest', '.']
+
+images:
+  - 'gcr.io/$PROJECT_ID/msvc-config'

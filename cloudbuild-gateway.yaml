@@ -1,0 +1,7 @@
+steps:
+  # Build the Gateway microservice
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f', 'microservice-gateway/Dockerfile', '-t', 'gcr.io/starlit-tube-479621-g3/msvc-gateway', '.']
+
+images:
+  - 'gcr.io/starlit-tube-479621-g3/msvc-gateway'
