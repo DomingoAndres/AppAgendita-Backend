@@ -1,9 +1,7 @@
 steps:
-# 1. Construir la imagen de cada microservicio
+# 1. Construir la imagen de cada microservicio (Sin Eureka - no necesario en Cloud Run)
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/starlit-tube-479621-g3/msvc-config', '-f', 'microservice-config/Dockerfile', '.']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/starlit-tube-479621-g3/msvc-eureka', '-f', 'microservice-eureka/Dockerfile', '.']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/starlit-tube-479621-g3/msvc-gateway', '-f', 'microservice-gateway/Dockerfile', '.']
 - name: 'gcr.io/cloud-builders/docker'
@@ -19,8 +17,6 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/starlit-tube-479621-g3/msvc-config']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/starlit-tube-479621-g3/msvc-eureka']
-- name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/starlit-tube-479621-g3/msvc-gateway']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/starlit-tube-479621-g3/msvc-user']
@@ -31,32 +27,33 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/starlit-tube-479621-g3/msvc-event']
 
-# 3. Desplegar cada microservicio en Cloud Run
+# 3. Desplegar microservicios en Cloud Run secuencialmente
+# Primero: Config Server
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args: ['run', 'deploy', 'msvc-config', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-config', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300']
+
+# Segundo: Gateway con URLs de microservicios
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'msvc-eureka', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-eureka', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300', '--set-env-vars', 'SPRING_CONFIG_IMPORT=configserver:https://msvc-config-749990022458.us-central1.run.app']
+  args: ['run', 'deploy', 'msvc-gateway', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-gateway', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300', '--set-env-vars', 'SPRING_CONFIG_IMPORT=configserver:https://msvc-config-74jugglhoa-uc.a.run.app,MSVC_USER_URL=https://msvc-user-74jugglhoa-uc.a.run.app,MSVC_TASK_URL=https://msvc-task-74jugglhoa-uc.a.run.app,MSVC_NOTE_URL=https://msvc-note-74jugglhoa-uc.a.run.app,MSVC_EVENT_URL=https://msvc-event-74jugglhoa-uc.a.run.app']
+
+# Tercero: Microservicios de negocio
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'msvc-gateway', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-gateway', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300', '--set-env-vars', 'SPRING_CONFIG_IMPORT=configserver:https://msvc-config-749990022458.us-central1.run.app']
+  args: ['run', 'deploy', 'msvc-user', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-user', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300', '--set-env-vars', 'SPRING_CONFIG_IMPORT=configserver:https://msvc-config-74jugglhoa-uc.a.run.app,DB_HOST=136.119.250.44,DB_NAME=agendita_users_dev,DB_USER=duoc_uc,DB_PASSWORD=mysecretpassword123']
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'msvc-user', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-user', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300', '--set-env-vars', 'SPRING_CONFIG_IMPORT=configserver:https://msvc-config-749990022458.us-central1.run.app,DB_HOST=136.119.250.44,DB_NAME=agendita_users_dev,DB_USER=duoc_uc,DB_PASSWORD=<Vsx%P;y1;.$Eu1H']
+  args: ['run', 'deploy', 'msvc-task', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-task', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300', '--set-env-vars', 'SPRING_CONFIG_IMPORT=configserver:https://msvc-config-74jugglhoa-uc.a.run.app,DB_HOST=136.119.250.44,DB_NAME=agendita_tasks_dev,DB_USER=duoc_uc,DB_PASSWORD=mysecretpassword123']
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'msvc-task', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-task', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300', '--set-env-vars', 'SPRING_CONFIG_IMPORT=configserver:https://msvc-config-749990022458.us-central1.run.app,DB_HOST=136.119.250.44,DB_NAME=agendita_tasks_dev,DB_USER=duoc_uc,DB_PASSWORD=<Vsx%P;y1;.$Eu1H']
+  args: ['run', 'deploy', 'msvc-note', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-note', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300', '--set-env-vars', 'SPRING_CONFIG_IMPORT=configserver:https://msvc-config-74jugglhoa-uc.a.run.app,DB_HOST=136.119.250.44,DB_NAME=agendita_notes_dev,DB_USER=duoc_uc,DB_PASSWORD=mysecretpassword123']
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'msvc-note', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-note', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300', '--set-env-vars', 'SPRING_CONFIG_IMPORT=configserver:https://msvc-config-749990022458.us-central1.run.app,DB_HOST=136.119.250.44,DB_NAME=agendita_notes_dev,DB_USER=duoc_uc,DB_PASSWORD=<Vsx%P;y1;.$Eu1H']
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
-  args: ['run', 'deploy', 'msvc-event', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-event', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300', '--set-env-vars', 'SPRING_CONFIG_IMPORT=configserver:https://msvc-config-749990022458.us-central1.run.app,DB_HOST=136.119.250.44,DB_NAME=agendita_events_dev,DB_USER=duoc_uc,DB_PASSWORD=<Vsx%P;y1;.$Eu1H']
+  args: ['run', 'deploy', 'msvc-event', '--image', 'gcr.io/starlit-tube-479621-g3/msvc-event', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--memory', '512Mi', '--timeout', '300', '--set-env-vars', 'SPRING_CONFIG_IMPORT=configserver:https://msvc-config-74jugglhoa-uc.a.run.app,DB_HOST=136.119.250.44,DB_NAME=agendita_events_dev,DB_USER=duoc_uc,DB_PASSWORD=mysecretpassword123']
 
 images:
 - 'gcr.io/starlit-tube-479621-g3/msvc-config'
-- 'gcr.io/starlit-tube-479621-g3/msvc-eureka'
 - 'gcr.io/starlit-tube-479621-g3/msvc-gateway'
 - 'gcr.io/starlit-tube-479621-g3/msvc-user'
 - 'gcr.io/starlit-tube-479621-g3/msvc-task'
