@@ -1,0 +1,175 @@
+# Versión de la sintaxis de Docker Compose
+version: '3.8'
+
+# --- 1. Definición de la Red ---
+# Crea una red interna para que los contenedores se comuniquen entre sí por su nombre.
+networks:
+  agendita-net:
+    driver: bridge
+
+services:
+  # --- 2. Config Server (msvc-config) ---
+  config-server:
+    build:
+      context: .
+      dockerfile: microservice-config/Dockerfile
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - agendita-net
+    restart: unless-stopped
+
+  # --- 3. Eureka Server (msvc-eureka) ---
+  eureka-server:
+    build:
+      context: .
+      dockerfile: microservice-eureka/Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      # Apunta al Config Server dentro de la red de Docker
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8888"
+    networks:
+      - agendita-net
+    depends_on:
+      config-server:
+        condition: service_started
+    restart: unless-stopped
+
+  # --- 4. API Gateway (msvc-gateway) ---
+  gateway-service:
+    build:
+      context: .
+      dockerfile: microservice-gateway/Dockerfile
+    container_name: gateway-service
+    ports:
+      - "8080:8080" # Punto de entrada principal a la aplicación
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8888"
+      # Configuración para reintentos, útil si el Config Server tarda en arrancar
+      SPRING_CLOUD_CONFIG_FAIL_FAST: "false"
+      SPRING_CLOUD_CONFIG_RETRY_MAX_ATTEMPTS: 20
+      SPRING_CLOUD_CONFIG_RETRY_INITIAL_INTERVAL: 2000
+    networks:
+      - agendita-net
+    depends_on:
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    restart: unless-stopped
+
+  # --- 5. Microservicio de Usuario (msvc-user) ---
+  msvc-user:
+    build:
+      context: .
+      dockerfile: microservice-user/Dockerfile
+    container_name: msvc-user
+    ports:
+      - "8001:8080" # Puerto expuesto para acceso directo si es necesario
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8888"
+      # Variables para la conexión a la BD en la nube (¡Reemplazar con valores reales!)
+      DB_HOST: "136.119.250.44"
+      DB_NAME: "agendita_users_dev"
+      DB_USER: "duoc_uc"
+      DB_PASSWORD: "<Vsx%P;y1;.$Eu1H"
+    networks:
+      - agendita-net
+    depends_on:
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+      gateway-service:
+        condition: service_started
+    restart: unless-stopped
+
+  # --- 6. Microservicio de Tareas (msvc-task) ---
+  msvc-task:
+    build:
+      context: .
+      dockerfile: microservice-task/Dockerfile
+    container_name: msvc-task
+    ports:
+      - "8002:8080"
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8888"
+      DB_HOST: "136.119.250.44"
+      DB_NAME: "agendita_tasks_dev"
+      DB_USER: "duoc_uc"
+      DB_PASSWORD: "<Vsx%P;y1;.$Eu1H"
+    networks:
+      - agendita-net
+    depends_on:
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+      gateway-service:
+        condition: service_started
+      msvc-user:
+        condition: service_started
+    restart: unless-stopped
+
+  # --- 7. Microservicio de Notas (msvc-note) ---
+  msvc-note:
+    build:
+      context: .
+      dockerfile: microservice-note/Dockerfile
+    container_name: msvc-note
+    ports:
+      - "8003:8080"
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8888"
+      DB_HOST: "136.119.250.44"
+      DB_NAME: "agendita_notes_dev"
+      DB_USER: "duoc_uc"
+      DB_PASSWORD: "<Vsx%P;y1;.$Eu1H"
+    networks:
+      - agendita-net
+    depends_on:
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+      gateway-service:
+        condition: service_started
+      msvc-user:
+        condition: service_started
+      msvc-task:
+        condition: service_started
+    restart: unless-stopped
+
+  # --- 8. Microservicio de Eventos (msvc-event) ---
+  msvc-event:
+    build:
+      context: .
+      dockerfile: microservice-event/Dockerfile
+    container_name: msvc-event
+    ports:
+      - "8004:8080"
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8888"
+      DB_HOST: "136.119.250.44"
+      DB_NAME: "agendita_events_dev"
+      DB_USER: "duoc_uc"
+      DB_PASSWORD: "<Vsx%P;y1;.$Eu1H"
+    networks:
+      - agendita-net
+    depends_on:
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+      gateway-service:
+        condition: service_started
+      msvc-user:
+        condition: service_started
+      msvc-task:
+        condition: service_started
+      msvc-note:
+        condition: service_started
+    restart: unless-stopped

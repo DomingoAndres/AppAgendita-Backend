@@ -11,7 +11,6 @@
         <relativePath>../pom.xml</relativePath> 
     </parent>
     
-    <groupId>com.microservice.note</groupId>
     <artifactId>microservice-note</artifactId>
     <name>microservice-note</name>
     <description>Spring Boot Note Microservice</description>
@@ -111,6 +110,13 @@
                         </exclude>
                     </excludes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

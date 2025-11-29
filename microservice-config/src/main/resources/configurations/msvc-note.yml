@@ -1,13 +1,13 @@
 server:
-  port: 8083
+  port: ${PORT:8083}
 spring:
   application:
     name: msvc-note
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://136.119.250.44:3306/agendita_notes_dev?useSSL=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: duoc_uc
-    password: <Vsx%P;y1;.$Eu1H
+    url: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update

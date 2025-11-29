@@ -11,7 +11,6 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.microservice.event</groupId>
   <artifactId>microservice-event</artifactId>
   <name>microservice-event</name>
   <description>Spring Boot Event Microservice</description>
@@ -113,6 +112,13 @@
             </exclude>
           </excludes>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

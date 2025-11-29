@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 # JWT Configuration (debe ser el mismo que en microservice-user)
 jwt:
