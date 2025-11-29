@@ -18,6 +18,7 @@ public class GatewayConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    /* 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
@@ -50,5 +51,5 @@ public class GatewayConfig {
                         .uri("http://localhost:9091"))
                 
                 .build();
-    }
+    }*/
 }

@@ -1,0 +1,168 @@
+services:
+  # --- 1. Gateway ---
+  - type: web
+    name: msvc-gateway
+    runtime: docker
+    repo: https://github.com/DomingoAndres/AppAgendita-Backend
+    branch: render-test
+    rootDir: .
+    dockerfilePath: ./Dockerfile
+    dockerContext: .  # CAMBIO IMPORTANTE: Contexto en la raíz
+    plan: free
+    buildArgs:        # NUEVO: Le decimos qué módulo construir
+      - key: MODULE_NAME
+        value: microservice-gateway
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: EUREKA_CLIENT_ENABLED # Aseguramos que Eureka esté muerto
+        value: false
+      - key: SPRING_CLOUD_CONFIG_ENABLED # Aseguramos que Config Server esté muerto
+        value: false
+
+  # --- 2. Microservicio de Usuario ---
+  - type: web
+    name: msvc-user
+    runtime: docker
+    repo: https://github.com/DomingoAndres/AppAgendita-Backend
+    branch: render-test
+    rootDir: .
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    buildArgs:
+      - key: MODULE_NAME
+        value: microservice-user
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_CLOUD_CONFIG_ENABLED
+        value: false
+      - key: DB_HOST
+        fromDatabase:
+          name: agendita-db
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: agendita-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: agendita-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: agendita-db
+          property: password
+
+  # --- 3. Microservicio de Tareas ---
+  - type: web
+    name: msvc-task
+    runtime: docker
+    repo: https://github.com/DomingoAndres/AppAgendita-Backend
+    branch: render-test
+    rootDir: .
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    buildArgs:
+      - key: MODULE_NAME
+        value: microservice-task
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_CLOUD_CONFIG_ENABLED
+        value: false
+      - key: DB_HOST
+        fromDatabase:
+          name: agendita-db
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: agendita-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: agendita-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: agendita-db
+          property: password
+
+  # --- 4. Microservicio de Notas ---
+  - type: web
+    name: msvc-note
+    runtime: docker
+    repo: https://github.com/DomingoAndres/AppAgendita-Backend
+    branch: render-test
+    rootDir: .
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    buildArgs:
+      - key: MODULE_NAME
+        value: microservice-note
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_CLOUD_CONFIG_ENABLED
+        value: false
+      - key: DB_HOST
+        fromDatabase:
+          name: agendita-db
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: agendita-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: agendita-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: agendita-db
+          property: password
+
+  # --- 5. Microservicio de Eventos ---
+  - type: web
+    name: msvc-event
+    runtime: docker
+    repo: https://github.com/DomingoAndres/AppAgendita-Backend
+    branch: render-test
+    rootDir: .
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    buildArgs:
+      - key: MODULE_NAME
+        value: microservice-event
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_CLOUD_CONFIG_ENABLED
+        value: false
+      - key: DB_HOST
+        fromDatabase:
+          name: agendita-db
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: agendita-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: agendita-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: agendita-db
+          property: password
+
+# --- Base de Datos Compartida ---
+databases:
+  - name: agendita-db
+    plan: free
+    databaseName: agendita_root_db
+    user: agendita_admin

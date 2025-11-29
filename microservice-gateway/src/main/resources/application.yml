@@ -1,5 +1,51 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: msvc-gateway
+  # IMPORTANTE: Desactivamos la búsqueda de configuración en la nube
   config:
-    import: optional:configserver:http://localhost:8888
+    import: "optional:configserver:"
+  cloud:
+    config:
+      enabled: false
+    gateway:
+      # Configuración de rutas manuales para Render (Sin Eureka)
+      routes:
+        - id: msvc-user
+          uri: http://msvc-user:8080
+          predicates:
+            - Path=/api/users/**, /api/auth/** # <--- AHORA EL USUARIO MANEJA LOGIN Y USERS
+
+        - id: msvc-task
+          uri: http://msvc-task:8080
+          predicates:
+            - Path=/api/tasks/**
+
+        - id: msvc-note
+          uri: http://msvc-note:8080
+          predicates:
+            - Path=/api/notes/**
+
+        - id: msvc-event
+          uri: http://msvc-event:8080
+          predicates:
+            - Path=/api/events/**
+
+      # Desactivamos el localizador automático de Eureka
+      discovery:
+        locator:
+          enabled: false
+
+# Desactivamos el cliente Eureka totalmente
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+
+# --- SEGURIDAD JWT ---
+# Pega aquí la misma clave que usas en los otros microservicios
+jwt:
+  secret: myVerySecretKeyForAppAgenditaTaskService2024
