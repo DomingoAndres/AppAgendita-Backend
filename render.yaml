@@ -7,17 +7,16 @@ services:
     branch: render-test
     rootDir: .
     dockerfilePath: ./Dockerfile
-    dockerContext: .  # CAMBIO IMPORTANTE: Contexto en la raíz
+    dockerContext: .
     plan: free
-    buildArgs:        # NUEVO: Le decimos qué módulo construir
-      - key: MODULE_NAME
-        value: microservice-gateway
     envVars:
+      - key: JAR_NAME       # <--- LA SOLUCIÓN
+        value: msvc-gateway # Nombre del jar sin .jar
       - key: PORT
         value: 8080
-      - key: EUREKA_CLIENT_ENABLED # Aseguramos que Eureka esté muerto
+      - key: EUREKA_CLIENT_ENABLED
         value: false
-      - key: SPRING_CLOUD_CONFIG_ENABLED # Aseguramos que Config Server esté muerto
+      - key: SPRING_CLOUD_CONFIG_ENABLED
         value: false
 
   # --- 2. Microservicio de Usuario ---
@@ -30,10 +29,9 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     plan: free
-    buildArgs:
-      - key: MODULE_NAME
-        value: microservice-user
     envVars:
+      - key: JAR_NAME       # <--- LA SOLUCIÓN
+        value: msvc-user
       - key: PORT
         value: 8080
       - key: SPRING_CLOUD_CONFIG_ENABLED
@@ -65,10 +63,9 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     plan: free
-    buildArgs:
-      - key: MODULE_NAME
-        value: microservice-task
     envVars:
+      - key: JAR_NAME       # <--- LA SOLUCIÓN
+        value: msvc-task
       - key: PORT
         value: 8080
       - key: SPRING_CLOUD_CONFIG_ENABLED
@@ -100,10 +97,9 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     plan: free
-    buildArgs:
-      - key: MODULE_NAME
-        value: microservice-note
     envVars:
+      - key: JAR_NAME       # <--- LA SOLUCIÓN
+        value: msvc-note
       - key: PORT
         value: 8080
       - key: SPRING_CLOUD_CONFIG_ENABLED
@@ -135,10 +131,9 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     plan: free
-    buildArgs:
-      - key: MODULE_NAME
-        value: microservice-event
     envVars:
+      - key: JAR_NAME       # <--- LA SOLUCIÓN
+        value: msvc-event
       - key: PORT
         value: 8080
       - key: SPRING_CLOUD_CONFIG_ENABLED
