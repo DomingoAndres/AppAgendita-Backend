@@ -70,13 +70,17 @@ public class User {
     @Builder.Default
     private Boolean emailVerified = false;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    // ... otros campos ...
 
-    @LastModifiedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @Builder.Default // Importante si usas Builder
+    private LocalDateTime createdAt = LocalDateTime.now(); // <--- ¡INICIALIZAR AQUÍ!
+
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now(); // <--- ¡INICIALIZAR AQUÍ!
+
+    // ... equals, hashcode, toString ...
 
     @Override
     public boolean equals(Object o) {
